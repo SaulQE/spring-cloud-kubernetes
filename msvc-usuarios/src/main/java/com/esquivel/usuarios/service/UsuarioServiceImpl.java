@@ -44,4 +44,10 @@ public class UsuarioServiceImpl implements UsuarioService {
     public Usuario update(Usuario usuario) {
         return usuarioRepository.save(usuario);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<Usuario> findByEmail(String email) {
+        return usuarioRepository.findByEmail(email);
+    }
 }

@@ -2,11 +2,15 @@ package com.esquivel.cursos.controllers;
 
 import com.esquivel.cursos.entity.Curso;
 import com.esquivel.cursos.services.CursoService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -31,12 +35,21 @@ public class CursoController {
     }
 
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody Curso curso) {
+    public ResponseEntity<?> save(@Valid @RequestBody Curso curso, BindingResult result) {
+        /* Si tiene errores */
+        if (result.hasErrors()) {
+            return validar(result);
+        }
         return ResponseEntity.status(HttpStatus.CREATED).body(cursoService.save(curso));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> edit(@RequestBody Curso newCurso, @PathVariable Long id) {
+    public ResponseEntity<?> edit(@Valid @RequestBody Curso newCurso, BindingResult result, @PathVariable Long id) {
+        /* Si tiene errores */
+        if (result.hasErrors()) {
+            return validar(result);
+        }
+
         Optional<Curso> optionalCurso = cursoService.findById(id);
         if (optionalCurso.isPresent()) {
             newCurso.setId(id);
@@ -55,4 +68,11 @@ public class CursoController {
         return ResponseEntity.notFound().build();
     }
 
+    private static ResponseEntity<Map<String, String>> validar(BindingResult result) {
+        Map<String, String> errores = new HashMap<>();
+        result.getFieldErrors().forEach(err -> {
+            errores.put(err.getField(), "El campo " + err.getField() + " " + err.getDefaultMessage());
+        });
+        return ResponseEntity.badRequest().body(errores);
+    }
 }
