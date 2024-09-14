@@ -1,6 +1,6 @@
 package com.esquivel.cursos.repositories;
 
-import com.esquivel.cursos.entity.Curso;
+import com.esquivel.cursos.models.entity.Curso;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

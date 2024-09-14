@@ -1,6 +1,6 @@
 package com.esquivel.cursos.controllers;
 
-import com.esquivel.cursos.entity.Curso;
+import com.esquivel.cursos.models.entity.Curso;
 import com.esquivel.cursos.services.CursoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

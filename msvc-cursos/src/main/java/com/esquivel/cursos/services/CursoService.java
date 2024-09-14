@@ -1,6 +1,7 @@
 package com.esquivel.cursos.services;
 
-import com.esquivel.cursos.entity.Curso;
+import com.esquivel.cursos.models.Usuario;
+import com.esquivel.cursos.models.entity.Curso;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,4 +13,8 @@ public interface CursoService
     Curso save(Curso curso);
     void deleteById(Long id);
     Curso update(Curso curso);
+
+    Optional<Usuario> assignUser(Usuario usuario, Long cursoId);
+    Optional<Usuario> createUser(Usuario usuario, Long cursoId);
+    Optional<Usuario> deleteUser(Usuario usuario, Long cursoId);
 }
