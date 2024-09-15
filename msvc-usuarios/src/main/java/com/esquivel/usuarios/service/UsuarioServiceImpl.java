@@ -46,6 +46,11 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
+    public List<Usuario> findAllByIds(Iterable<Long> ids) {
+        return usuarioRepository.findAllById(ids);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public Optional<Usuario> findByEmail(String email) {
         return usuarioRepository.findByEmail(email);
