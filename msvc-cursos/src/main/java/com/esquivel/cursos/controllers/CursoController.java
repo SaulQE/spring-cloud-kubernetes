@@ -1,7 +1,9 @@
 package com.esquivel.cursos.controllers;
 
+import com.esquivel.cursos.models.Usuario;
 import com.esquivel.cursos.models.entity.Curso;
 import com.esquivel.cursos.services.CursoService;
+import feign.FeignException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -64,6 +67,51 @@ public class CursoController {
         if (optionalCurso.isPresent()) {
             cursoService.deleteById(id);
             return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @PutMapping("/asignar-usuario/{cursoId}")
+    public ResponseEntity<?> assignUser(@RequestBody Usuario usuario, @PathVariable Long cursoId) {
+        Optional<Usuario> usuarioOptional;
+        try {
+            usuarioOptional = cursoService.assignUser(usuario, cursoId);
+        }catch (FeignException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Collections.singletonMap("mensaje", "El usuario no existe: " + e.getMessage()));
+        }
+        if (usuarioOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.CREATED).body(usuarioOptional.get());
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @PostMapping("/crear-usuario/{cursoId}")
+    public ResponseEntity<?> createUser(@RequestBody Usuario usuario, @PathVariable Long cursoId) {
+        Optional<Usuario> usuarioOptional;
+        try {
+            usuarioOptional = cursoService.createUser(usuario, cursoId);
+        }catch (FeignException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Collections.singletonMap("mensaje", "No se pudo crear el usuario: " + e.getMessage()));
+        }
+        if (usuarioOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.CREATED).body(usuarioOptional.get());
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @DeleteMapping("/eliminar-usuario/{cursoId}")
+    public ResponseEntity<?> deleteUser(@RequestBody Usuario usuario, @PathVariable Long cursoId) {
+        Optional<Usuario> usuarioOptional;
+        try {
+            usuarioOptional = cursoService.deleteUser(usuario, cursoId);
+        }catch (FeignException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Collections.singletonMap("mensaje", "No existe el usuario: " + e.getMessage()));
+        }
+        if (usuarioOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.OK).body(usuarioOptional.get());
         }
         return ResponseEntity.notFound().build();
     }
