@@ -10,9 +10,11 @@ public interface CursoService
 {
     List<Curso> findAll();
     Optional<Curso> findById(Long id);
+    Optional<Curso> findAllByIds(Long id);
     Curso save(Curso curso);
     void deleteById(Long id);
     Curso update(Curso curso);
+
 
     Optional<Usuario> assignUser(Usuario usuario, Long cursoId);
     Optional<Usuario> createUser(Usuario usuario, Long cursoId);
