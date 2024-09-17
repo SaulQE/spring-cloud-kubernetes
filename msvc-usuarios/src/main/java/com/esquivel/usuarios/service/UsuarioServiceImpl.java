@@ -1,5 +1,6 @@
 package com.esquivel.usuarios.service;
 
+import com.esquivel.usuarios.clients.CursoClienteRest;
 import com.esquivel.usuarios.models.entity.Usuario;
 import com.esquivel.usuarios.repositories.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,9 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private CursoClienteRest cursoClienteRest;
 
     @Override
     @Transactional(readOnly = true)
@@ -37,6 +41,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Transactional
     public void deleteById(Long id) {
         usuarioRepository.deleteById(id);
+        cursoClienteRest.deleteCursoUsuarioById(id);
     }
 
     @Override
